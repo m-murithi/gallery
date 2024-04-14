@@ -6,7 +6,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout source code from your version control system
                 git 'https://github.com/m-murithi/gallery.git'
             }
         }
@@ -15,6 +14,19 @@ pipeline {
             steps {
                 // Ensure required software and dependencies are installed
                 sh 'npm install' 
+            }
+        }
+        
+        //stage('Test') {
+        //    steps {
+        //         sh 'npm test' 
+        //    }
+        //}
+        
+        stage('Deploy to Render') {
+            steps {
+                // Deploy to Render platform
+                sh 'node server &'
             }
         }
     }
