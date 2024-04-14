@@ -29,6 +29,12 @@ pipeline {
                 sh 'node server &'
             }
         }
+        
+        stage('Slack') {
+            steps {
+                slackSend channel: '#marvin_ip1', message: 'test message'
+            }
+        }
     }
 
     post {
