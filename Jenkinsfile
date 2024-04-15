@@ -6,6 +6,7 @@ pipeline {
     environment {
         EMAIL_SUBJECT = "Build Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER}"
         EMAIL_BODY = "The build of ${env.JOB_NAME} - ${env.BUILD_NUMBER} has failed. Please check Jenkins for details."
+        RENDER_APP_URL = 'https://gallery-cvvb.onrender.com'
     }
 
     stages {
@@ -37,7 +38,7 @@ pipeline {
         
         stage('Slack') {
             steps {
-                slackSend channel: '#marvin_ip1', message: 'Build ${env.BUILD_NUMBER} completed'
+                slackSend channel: '#marvin_ip1', message: 'Build ${env.BUILD_NUMBER} completed. Site: ${RENDER_APP_URL}'
             }
         }
     }
