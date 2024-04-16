@@ -4,8 +4,6 @@ pipeline {
     tools {nodejs "node"} // name should be similar to name used for installer in the global tool configuration.
 
     environment {
-        EMAIL_SUBJECT = 'Build Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER}'
-        EMAIL_BODY = 'The build of ${env.JOB_NAME} - ${env.BUILD_NUMBER} has failed. Please check Jenkins for details.'
         RENDER_APP_URL = 'https://gallery-cvvb.onrender.com'
     }
     
@@ -49,7 +47,7 @@ pipeline {
         
         stage('Slack') {
             steps {
-                slackSend channel: '#marvin_ip1', message: 'Build ${env.BUILD_NUMBER} completed. Site: ${RENDER_APP_URL}'
+                slackSend channel: '#marvin_ip1', message: "Build ${env.BUILD_NUMBER} completed. Site: ${RENDER_APP_URL}"
             }
         }
     }
@@ -59,9 +57,18 @@ pipeline {
             echo 'Pipeline succeeded! Your changes have been deployed.'
         }
         failure {
-            mail to: 'marvin.murithi@student.moringaschool.com', 
-                 subject: '${EMAIL_SUBJECT}',
-                 body: '${EMAIL_BODY}'
+            emailext attachLog: true, 
+                body:
+                    """
+                    <p>EXECUTED: Job <b>\'${env.JOB_NAME}:${env.BUILD_NUMBER})\'</b></p>
+                    <p>
+                    View console output at 
+                    "<a href="${env.BUILD_URL}">${env.JOB_NAME}:${env.BUILD_NUMBER}</a>"
+                    </p> 
+                      <p><i>(Build log is attached.)</i></p>
+                    """,
+                subject: "Status: FAILURE -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'", 
+                to: 'marvin.murithi@student.moringaschool.com'
         }
     }
 }
